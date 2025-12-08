@@ -1,0 +1,21 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Siemens Sans', sans-serif, Arial;
+  background-color: var(--theme-color-soft-bkg);
+  color: var(--theme-color-std-text);
+}
+
+
+.app-container {
+  height: 100%;
+  width: 100%;
+}

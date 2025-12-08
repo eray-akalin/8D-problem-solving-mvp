@@ -1,0 +1,62 @@
+.landing-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--theme-color-1--active);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+
+    /* Animasyon Ayarları */
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Yukarı Kayma Efekti*/
+.landing-container.slide-up {
+    transform: translateY(-100vh);
+}
+
+
+.landing-content {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease forwards;
+    animation-delay: 0.3s;
+    /* biraz bekle sonra gel */
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.landing-logo {
+    width: 150px;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+.landing-title {
+    font-size: 3rem;
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.landing-subtitle {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    max-width: 600px;
+    line-height: 1.6;
+}

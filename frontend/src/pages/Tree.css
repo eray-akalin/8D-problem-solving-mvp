@@ -1,0 +1,170 @@
+.tree ul {
+    padding-top: 20px;
+    position: relative;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    display: flex;
+    justify-content: center;
+}
+
+.tree li {
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 20px 5px 0 5px;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+}
+
+/*ÇİZGİLER */
+.tree li::before,
+.tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: 2px solid #666;
+    /* Çizgi Rengi */
+    width: 50%;
+    height: 20px;
+}
+
+.tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 2px solid #666;
+
+}
+
+/* Sadece tek çocuk varsa çizgi düz insin */
+.tree li:only-child::after,
+.tree li:only-child::before {
+    display: none;
+}
+
+.tree li:only-child {
+    padding-top: 0;
+}
+
+/* İlk ve son çocukların çizgilerini düzelt */
+.tree li:first-child::before,
+.tree li:last-child::after {
+    border: 0 none;
+}
+
+/* En son dikey çizgiyi çiz (Kutunun tepesine inen) */
+.tree li:last-child::before {
+    border-right: 2px solid #666;
+
+    border-radius: 0 5px 0 0;
+}
+
+.tree li:first-child::after {
+    border-radius: 5px 0 0 0;
+}
+
+/* Aşağı inen dikey çizgiler (ul'den önceki) */
+.tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 2px solid #666;
+
+    width: 0;
+    height: 20px;
+}
+
+/* NODES */
+.tree-node-card {
+    border: var(--theme-soft-dashed-bdr-1);
+    padding: 25px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Siemens Sans', sans-serif;
+    display: inline-block;
+    border-radius: 6px;
+    transition: all 0.5s;
+    background-color: var(--theme-color-1--active);
+    min-width: 350px;
+    max-width: 450px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover Efekti */
+.tree-node-card:hover {
+    background-color: #444;
+    border-color: #999;
+}
+
+/* Kök Neden (Yeşil) */
+.root-cause-card {
+    border: 2px solid #2ecc71 !important;
+    background-color: rgba(46, 204, 113, 0.1) !important;
+}
+
+
+/*KLASİK FOLDER YAPISI  
+
+.tree ul {
+    list-style-type: none;
+    padding-left: 20px;  
+    position: relative;
+    display: block; 
+}
+
+.tree li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+
+.tree ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;  
+    bottom: 0;
+    width: 2px;
+    background-color: #666;
+}
+
+
+.tree li::before {
+    content: '';
+    position: absolute;
+    top: 25px; 
+    left: -10px; 
+    width: 30px;
+    height: 2px;
+    background-color: #666;
+}
+
+
+.tree li:last-child {
+    background-color: #1d1d1b;  
+}
+
+ 
+.tree-node-card {
+    border: 1px solid #555;
+    padding: 15px;
+    background-color: var(--theme-color-component-surface);
+    display: inline-block;
+    border-radius: 4px;
+    min-width: 300px;
+    position: relative;
+    z-index: 2;
+}
+
+.root-cause-card {
+    border: 2px solid #2ecc71 !important;
+    background-color: rgba(46, 204, 113, 0.1) !important;
+}
+*/

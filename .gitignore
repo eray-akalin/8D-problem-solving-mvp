@@ -1,0 +1,35 @@
+#Sistem Dosyaları
+.DS_Store
+Thumbs.db
+*.log
+
+#IDE ve Editör Dosyaları
+.vscode/
+.idea/
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.swp
+
+#FRONTEND
+# Bağımlılıklar (Çok şişirir, yüklenmez)
+frontend/node_modules/
+
+# Build klasörü (Her buildde değişir, yüklenmez)
+frontend/dist/
+
+# Ortam değişkenleri (Varsa)
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# PHP
+# Composer paketleri
+backend/vendor/
+
+#GÜVENLİK
+
+backend/config.php
+backend/.env
+
