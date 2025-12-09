@@ -1,4 +1,5 @@
 <?php
+// backend/src/Service/CauseService.php
 
 require_once __DIR__ . '/../Repository/CauseRepository.php';
 
@@ -14,13 +15,11 @@ class CauseService
     public function get_causes_tree($problemId)
     {
         $rawData = $this->causeRepository->get_by_problem_id($problemId);
-
         return $this->buildTree($rawData);
     }
 
     public function addCause($data)
     {
-
         if (empty($data['description'])) {
             throw new Exception("Açıklama alanı zorunludur.");
         }
@@ -40,22 +39,29 @@ class CauseService
         return $branch;
     }
 
+
     public function updateRootCause($data)
     {
         if (!isset($data['id'])) {
             throw new Exception("ID eksik.");
         }
 
-        $isRootCause = isset($data['is_root_cause']) ? $data['is_root_cause'] : 0;
-        $action = isset($data['solution_action']) ? $data['solution_action'] : null;
+        //Önce veritabanından mevcut kaydı bul
 
-        //Eğer bu bir kök neden işaretlemesiyse, 
-        //önce o probleme ait diğer işaretleri temizle.
-        if ($isRootCause == 1 && isset($data['problem_id'])) {
-            $this->causeRepository->resetRootCauses($data['problem_id']);
+        $currentCause = $this->causeRepository->find($data['id']);
+
+        if (!$currentCause) {
+            throw new Exception("Kayıt bulunamadı.");
         }
 
-        return $this->causeRepository->update($data['id'], $isRootCause, $action);
+        // Eğer bu bir kök neden işaretlemesiyse (is_root_cause = 1)
+        // O probleme ait diğer işaretleri temizle.
+        if (isset($data['is_root_cause']) && $data['is_root_cause'] == 1) {
+            $this->causeRepository->resetRootCauses($currentCause['problem_id']);
+        }
+
+
+        return $this->causeRepository->update($data['id'], $data);
     }
 
     public function deleteCause($id)

@@ -14,7 +14,7 @@ export default function Login() {
         e.preventDefault();
         try {
             // Canlıya alırken '/api/login.php' olarak kalacak
-            const response = await axios.post('http://localhost:8000/api/login.php', {
+            const response = await axios.post('/backend/public/api/login.php', {
                 username,
                 password
             });

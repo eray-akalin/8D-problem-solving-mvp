@@ -41,7 +41,7 @@ export default function Dashboard() {
 
     const fetchProblems = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/problems.php');
+            const response = await axios.get('/backend/public/api/problems.php');
             setRowData(response.data); // Sadece veriyi güncelle
         } catch (error) {
             console.error("Veri çekme hatası:", error);
@@ -135,7 +135,11 @@ export default function Dashboard() {
         if (!id) return;
 
         try {
-            await axios.delete(`http://localhost:8000/api/problems.php?id=${id}`);
+            // DEĞİŞİKLİK BURADA:
+            // DELETE isteği engellendiği için POST atıyoruz
+            // ve sunucuya "Bu aslında bir DELETE işlemidir" diyoruz (?_method=DELETE)
+            await axios.post(`/backend/public/api/problems.php?id=${id}&_method=DELETE`);
+
             fetchProblems(); // Tabloyu yenile
             setDeleteConfig({ isOpen: false, idToDelete: null }); // Modalı kapat
         } catch (error) {

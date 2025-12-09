@@ -34,7 +34,7 @@ export default function CreateProblemModal({ show, onClose, onSuccess }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/api/problems.php', formData);
+            const response = await axios.post('/backend/public/api/problems.php', formData);
             if (response.data.status === 'success') {
                 alert('Problem başarıyla oluşturuldu!');
                 onSuccess(); // Dashboard'daki tabloyu yenile

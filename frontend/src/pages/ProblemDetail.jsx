@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 import { IxButton, IxTypography, IxApplicationHeader, IxCard, IxCardContent, IxIcon, IxCheckbox } from '@siemens/ix-react';
 import { iconChevronLeft, iconPlus, iconTrashcan, iconAddCircle, iconInfo } from '@siemens/ix-icons/icons';
 
@@ -81,15 +80,14 @@ const CauseNode = ({ node, onAddChild, onSetRoot, onDelete }) => {
     );
 };
 
-//ANA SAYFA
+// ANA SAYFA
 export default function ProblemDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-
     const [treeData, setTreeData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [problem, setProblem] = useState(null); // Problem detayını tutacak state
+    const [problem, setProblem] = useState(null);
 
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
@@ -102,17 +100,16 @@ export default function ProblemDetail() {
         nodeIdToDelete: null
     });
 
-
     const fetchData = async () => {
         try {
-            // Paralel istek: İkisi aynı anda başlar, ikisi de bitince ekran açılır
+            // GET istekleri normal çalışır
             const [treeRes, problemRes] = await Promise.all([
-                axios.get(`http://localhost:8000/api/causes.php?problem_id=${id}`),
-                axios.get(`http://localhost:8000/api/problems.php?id=${id}`)
+                axios.get(`/backend/public/api/causes.php?problem_id=${id}`),
+                axios.get(`/backend/public/api/problems.php?id=${id}`)
             ]);
 
             setTreeData(treeRes.data);
-            setProblem(problemRes.data); // Problem verisini kaydet
+            setProblem(problemRes.data);
             setLoading(false);
         } catch (error) {
             console.error("Hata:", error);
@@ -136,15 +133,18 @@ export default function ProblemDetail() {
         });
     };
 
+    // --- SİLME İŞLEMİ (GÜNCELLENDİ: Method Spoofing) ---
     const confirmDeleteNode = () => {
-        const id = deleteConfig.nodeIdToDelete;
-        if (!id) return;
+        const nodeId = deleteConfig.nodeIdToDelete;
+        if (!nodeId) return;
 
-        axios.delete(`http://localhost:8000/api/causes.php?id=${id}`)
+        // DELETE yerine POST + _method=DELETE
+        axios.post(`/backend/public/api/causes.php?id=${nodeId}&_method=DELETE`)
             .then(() => {
-                fetchData(); // Ağacı yenile
+                fetchData();
                 setDeleteConfig({ isOpen: false, nodeIdToDelete: null });
-            });
+            })
+            .catch(err => console.error("Silme hatası:", err));
     };
 
     const openAddModal = (node) => {
@@ -167,26 +167,33 @@ export default function ProblemDetail() {
         const { type, activeNode } = modalConfig;
 
         if (type === 'add') {
-            axios.post('http://localhost:8000/api/causes.php', {
+            // Ekleme zaten POST olduğu için sorun yok
+            axios.post('/backend/public/api/causes.php', {
                 problem_id: id,
                 parent_id: activeNode ? activeNode.id : null,
                 description: inputValue
             }).then(() => fetchData());
 
         } else if (type === 'root') {
-            axios.put('http://localhost:8000/api/causes.php', {
+            // --- KÖK NEDEN SEÇİMİ (GÜNCELLENDİ: Method Spoofing) ---
+            // PUT yerine POST + _method=PUT
+            axios.post(`/backend/public/api/causes.php?_method=PUT`, {
                 id: activeNode.id,
                 problem_id: id,
                 is_root_cause: 1,
                 solution_action: inputValue
             }).then(() => fetchData());
         }
+
+        setModalConfig({ ...modalConfig, isOpen: false });
     };
 
+    // --- PROBLEM DURUM GÜNCELLEME (GÜNCELLENDİ: Method Spoofing) ---
     const handleStatusChange = async (e) => {
         const newStatus = e.target.checked ? 'closed' : 'open';
         try {
-            await axios.put('http://localhost:8000/api/problems.php', {
+            // PUT yerine POST + _method=PUT
+            await axios.post(`/backend/public/api/problems.php?_method=PUT`, {
                 id: problem.id,
                 status: newStatus
             });
@@ -195,8 +202,6 @@ export default function ProblemDetail() {
             console.error("Status güncelleme hatası:", error);
         }
     };
-
-
 
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -224,12 +229,20 @@ export default function ProblemDetail() {
                     >
                         Listeye Dön
                     </IxButton>
+                    <IxButton
+                        ghost
+                        variant="secondary"
+                        onClick={() => {
+                            localStorage.removeItem('auth_token');
+                            navigate('/login');
+                        }}
+                    >
+                        Çıkış
+                    </IxButton>
                 </div>
             </IxApplicationHeader>
 
-
             <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-
 
                 <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -242,39 +255,27 @@ export default function ProblemDetail() {
                                     checked={problem.status === 'closed'}
                                     onCheckedChange={handleStatusChange}
                                     label="Problem Çözüldü"
-
                                 ></IxCheckbox>
-
                             </div>
                         )}
                     </div>
                 </div>
-
 
                 {problem && (
                     <div style={{ marginBottom: '1.5rem' }}>
                         <IxCard variant="outline" style={{ width: '100%', pointerEvents: 'none' }}>
                             <IxCardContent>
                                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-
                                     <IxIcon name={iconInfo} size="24" style={{ color: '#00cccc' }} />
-
-
                                     <div style={{ flex: 1 }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                             <IxTypography format="h5" bold style={{ margin: 0 }}>
                                                 {problem.title}
                                             </IxTypography>
-
-
                                         </div>
-
-
-
                                         <IxTypography format="body" style={{ marginTop: '0.5rem', color: 'var(--theme-color-weak-text)' }}>
                                             {problem.description}
                                         </IxTypography>
-
                                         <div style={{ marginTop: '1rem', fontSize: '12px', color: '#666', display: 'flex', gap: '20px' }}>
                                             <span><strong>Sorumlu Ekip:</strong> {problem.responsible_team}</span>
                                             <span><strong>Tarih:</strong> {problem.created_at}</span>
