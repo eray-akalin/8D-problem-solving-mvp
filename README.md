@@ -4,7 +4,14 @@ This project is a Full-Stack prototype developed within the scope of the **Sieme
 
 The project specifically focuses on the digitization and visualization of problem definition (**D1-D2**) and root cause analysis (**D4-D5**) processes using **recursive** data structures.
 
+ 
 ---
+
+## Branches
+
+Warning: There are 2 branches, live-hosting branch is for deployed version, main branch is compatible with local setups.
+- `main`: Local development version. Fully working from localhost with the setup steps below.
+- `live-hosting`: Adjusted for free shared hosting (path fixes, method spoofing, limited HTTP method support, etc.).
 
 ##  Live Demo
 
