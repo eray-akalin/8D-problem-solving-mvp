@@ -29,4 +29,9 @@ class ProblemService
     {
         return $this->problemRepository->get_by_id($id);
     }
+
+    public function updateProblemStatus($id, $status)
+    {
+        return $this->problemRepository->updateStatus($id, $status);
+    }
 }

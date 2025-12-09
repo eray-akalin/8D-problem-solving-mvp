@@ -30,9 +30,17 @@ class ProblemController
                 echo json_encode(['status' => 'success', 'id' => $id]);
             } elseif ($method === 'DELETE') {
                 $id = $_GET['id'] ?? null;
-                if (!$id) throw new Exception("ID eksik");
+                if (!$id)
+                    throw new Exception("ID eksik");
                 $this->problemService->deleteProblem($id);
                 echo json_encode(['status' => 'success', 'message' => 'Problem silindi']);
+            } elseif ($method === 'PUT') {
+                $input = json_decode(file_get_contents("php://input"), true);
+                if (!isset($input['id']) || !isset($input['status'])) {
+                    throw new Exception("ID veya status eksik");
+                }
+                $this->problemService->updateProblemStatus($input['id'], $input['status']);
+                echo json_encode(['status' => 'success', 'message' => 'Problem durumu güncellendi']);
             }
         } catch (Exception $e) {
             http_response_code(500);

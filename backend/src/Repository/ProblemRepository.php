@@ -40,4 +40,11 @@ class ProblemRepository
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function updateStatus($id, $status)
+    {
+        $sql = "UPDATE problems SET status = :status WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([':status' => $status, ':id' => $id]);
+    }
 }

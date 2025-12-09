@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-import { IxButton, IxTypography, IxApplicationHeader, IxCard, IxCardContent, IxIcon } from '@siemens/ix-react';
+import { IxButton, IxTypography, IxApplicationHeader, IxCard, IxCardContent, IxIcon, IxCheckbox } from '@siemens/ix-react';
 import { iconChevronLeft, iconPlus, iconTrashcan, iconAddCircle, iconInfo } from '@siemens/ix-icons/icons';
 
 import './Tree.css';
@@ -178,6 +178,19 @@ export default function ProblemDetail() {
         }
     };
 
+    const handleStatusChange = async (e) => {
+        const newStatus = e.target.checked ? 'closed' : 'open';
+        try {
+            await axios.put('http://localhost:8000/api/problems.php', {
+                id: problem.id,
+                status: newStatus
+            });
+            setProblem({ ...problem, status: newStatus });
+        } catch (error) {
+            console.error("Status güncelleme hatası:", error);
+        }
+    };
+
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
@@ -212,11 +225,21 @@ export default function ProblemDetail() {
 
 
                 <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                         <h2 style={{ margin: 0, color: 'var(--theme-color-std-text)' }}>
                             Problem Analizi (ID: {id})
                         </h2>
+                        {problem && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <IxCheckbox
+                                    checked={problem.status === 'closed'}
+                                    onCheckedChange={handleStatusChange}
+                                    label="Problem Çözüldü"
 
+                                ></IxCheckbox>
+
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -238,6 +261,8 @@ export default function ProblemDetail() {
 
 
                                         </div>
+
+
 
                                         <IxTypography format="body" style={{ marginTop: '0.5rem', color: 'var(--theme-color-weak-text)' }}>
                                             {problem.description}
