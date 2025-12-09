@@ -1,10 +1,25 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IxButton } from '@siemens/ix-react';
 import '../pages/LandingPage.css';
 
-export default function LandingPage({ onStart, isVisible }) {
+export default function LandingPage() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (sessionStorage.getItem('hasSeenIntro')) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    const handleStart = () => {
+        sessionStorage.setItem('hasSeenIntro', 'true');
+        navigate('/login');
+    };
+
     return (
-        <div className={`landing-container ${!isVisible ? 'slide-up' : ''}`}>
+        <div className="landing-container">
             <div className="landing-content">
                 <img
                     src="/Siemens-logo.svg.png"
@@ -26,14 +41,14 @@ export default function LandingPage({ onStart, isVisible }) {
                 <IxButton
                     variant="primary"
                     size="lg" // Büyük
-                    onClick={onStart}
+                    onClick={handleStart}
                     style={{ padding: '0 40px', fontSize: '18px' }}
                 >
-                    Devam Etmek İçin Tıklayın
+                    Giriş Yap
                 </IxButton>
 
                 <div style={{ marginTop: '50px', bottom: '30px', fontSize: '12px', color: '#555' }}>
-                    Built by Eray Akalın.
+                    Built by Musa Eray Akalın.
                 </div>
             </div>
         </div>

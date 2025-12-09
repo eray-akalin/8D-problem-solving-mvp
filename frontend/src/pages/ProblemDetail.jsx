@@ -58,7 +58,7 @@ const CauseNode = ({ node, onAddChild, onSetRoot, onDelete }) => {
                         variant="secondary"
                         icon={iconTrashcan}
                         onClick={() => onDelete(node.id)}
-                        style={{ marginLeft: '5px', color: '#ff4d4d' }}
+                        style={{ marginLeft: '5px' }}
                     >
                     </IxButton>
                 </div>
@@ -86,7 +86,7 @@ export default function ProblemDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // State'ler
+
     const [treeData, setTreeData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [problem, setProblem] = useState(null); // Problem detayını tutacak state
@@ -121,6 +121,11 @@ export default function ProblemDetail() {
     };
 
     useEffect(() => {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
         fetchData();
     }, [id]);
 
@@ -191,6 +196,8 @@ export default function ProblemDetail() {
         }
     };
 
+
+
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
@@ -212,7 +219,7 @@ export default function ProblemDetail() {
                         icon={iconChevronLeft}
                         variant="primary"
                         outline
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/dashboard')}
                         style={{ color: 'white', borderColor: 'rgba(255,255,255,0.5)' }}
                     >
                         Listeye Dön

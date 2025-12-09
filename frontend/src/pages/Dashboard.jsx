@@ -9,14 +9,12 @@ import { iconAddCircle } from '@siemens/ix-icons/icons';
 // Grid Modüllerini Al
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
-// Siemens Entegrasyonu
 import { getIxTheme } from '@siemens/ix-aggrid';
 import * as agGrid from 'ag-grid-community';
 
 import CreateProblemModal from '../components/CreateProblemModal';
 import { useNavigate } from 'react-router-dom';
-import { iconTrashcan } from '@siemens/ix-icons/icons';
-import LandingPage from '../pages/LandingPage';
+import { iconTrashcan, iconLogOut } from '@siemens/ix-icons/icons';
 
 // Modülleri kaydet
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -33,15 +31,11 @@ export default function Dashboard() {
         idToDelete: null
     });
 
-    const [showLanding, setShowLanding] = useState(() => {
-        const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
-        return !hasSeenIntro; // İzlediyse (true) -> showLanding (false) olur.
-    });
 
-    const handleStartApp = () => {
-        setShowLanding(false);
-        // Tarayıcı hafızasına kaydet, intro görüldü
-        sessionStorage.setItem('hasSeenIntro', 'true');
+
+    const handleLogout = () => {
+        localStorage.removeItem('auth_token');
+        navigate('/login');
     };
 
 
@@ -113,8 +107,13 @@ export default function Dashboard() {
         });
     };
 
-    // Sayfa Yüklendiğinde 1 kere çalışır
     useEffect(() => {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
         initializeGridConfig(); // Ayarları yükle
         fetchProblems();        // Veriyi çek
     }, []);
@@ -148,10 +147,7 @@ export default function Dashboard() {
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-            <LandingPage
-                isVisible={showLanding}
-                onStart={handleStartApp}
-            />
+
 
             {/* HEADER GÜNCELLEMESİ */}
             <IxApplicationHeader
@@ -176,6 +172,16 @@ export default function Dashboard() {
                         onClick={() => setIsModalOpen(true)}
                     >
                         Yeni Problem Ekle
+                    </IxButton>
+
+                    <IxButton
+                        icon={iconLogOut}
+                        variant="secondary"
+                        outline
+                        onClick={handleLogout}
+                        style={{ marginLeft: '10px' }}
+                    >
+                        Çıkış
                     </IxButton>
                 </div>
             </IxApplicationHeader>
