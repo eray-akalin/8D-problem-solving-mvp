@@ -15,7 +15,7 @@ You can test the live application via the link below:
 
 ##  Screenshots
 
-| Landing Page (Welcome) | Dashboard & List | Root Cause Tree (Recursive) |
+| Landing Page | Dashboard & List | Root Cause Tree |
 |:---:|:---:|:---:|
 | ![Landing Page](screenshots/landing.png) | ![Dashboard](screenshots/dashboard.png) | ![Tree](screenshots/tree.png) |
 
@@ -52,7 +52,7 @@ You can test the live application via the link below:
 
 ### 3. Action Determination (Permanent Corrective Action)
 * Any cause can be flagged as a "Root Cause".
-* A permanent solution (action) can be entered for the item marked as the root cause.
+* A permanent solution can be entered for the item marked as the root cause.
 * Visually highlighted with green cards and icons.
 
 ---
@@ -71,11 +71,16 @@ Follow the steps below to run the project on your local machine.
     ```php
     return [
         'db' => [
-            'host'    => 'localhost',
-            'dbname'  => 'eightd_db',
-            'user'    => 'root',
-            'pass'    => 'YOUR_PASSWORD',
-            // ...
+            'host' => 'your host',
+            'port' => 0000,
+            'dbname' => 'your db name', 
+            'user' => 'your username',      
+            'pass' => 'your password',          
+            'charset' => 'utf8mb4',
+        ],
+        'auth' => [
+            'username' => 'admin',
+            'password' => 'YOUR_ADMIN_PASSWORD'
         ],
     ];
     ```
