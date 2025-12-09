@@ -9,7 +9,7 @@ The project specifically focuses on the digitization and visualization of proble
 ##  Live Demo
 
 You can test the live application via the link below:
- **[View Live Application](PASTE_YOUR_LIVE_LINK_HERE)**
+ **[View Live Application](https://eray-8d-platform.page.gd)**
 
 ---
 
